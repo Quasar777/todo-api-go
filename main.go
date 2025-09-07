@@ -58,9 +58,7 @@ func main() {
 	// создать задачу
 	app.Post("/api/tasks", func (c *fiber.Ctx) error {
 		if !strings.HasPrefix(c.Get("Content-Type"), "application/json") {
-			return c.Status(fiber.StatusUnsupportedMediaType).JSON(fiber.Map{
-				"error": "Content-Type must be application/json",
-			})
+			return unsupportedMediaTypeError(c)
 		}
 
 		var newTask Task
@@ -115,9 +113,7 @@ func main() {
 	// обновить задачу
 	app.Put("/api/tasks/:id", func (c *fiber.Ctx) error {
 		if !strings.HasPrefix(c.Get("Content-Type"), "application/json") {
-			return c.Status(fiber.StatusUnsupportedMediaType).JSON(fiber.Map{
-				"error": "Content-Type must be application/json",
-			})
+			return unsupportedMediaTypeError(c)
 		}
 
 		id, err := uuid.Parse(c.Params("id"))
@@ -204,6 +200,12 @@ func invalidIDError(c *fiber.Ctx) error {
 func notFoundError(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 		"error": "task not found",
+	})
+}
+
+func unsupportedMediaTypeError(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusUnsupportedMediaType).JSON(fiber.Map{
+		"error": "Content-Type must be application/json",
 	})
 }
 
