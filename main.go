@@ -67,14 +67,10 @@ func main() {
 		}
 
 		if newTask.Body == "" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "field 'body' is required",
-			})
+			return missingFieldError("body", c)
 		}
 		if newTask.Title == "" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "field 'title' is required",
-			})
+			return missingFieldError("title", c)
 		}
 
 		newTask.ID = uuid.New()
@@ -208,6 +204,12 @@ func unsupportedMediaTypeError(c *fiber.Ctx) error {
 func jsonBodyParsingError(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 		"error": "invalid JSON body",
+	})
+}
+
+func missingFieldError(fieldName string, c *fiber.Ctx) error {
+	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		"error": fmt.Sprintf("field %s is required", fieldName),
 	})
 }
 
