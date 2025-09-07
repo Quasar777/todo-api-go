@@ -63,9 +63,7 @@ func main() {
 
 		var newTask Task
 		if err := c.BodyParser(&newTask); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "invalid JSON body",
-			})
+			return jsonBodyParsingError(c)
 		}
 
 		if newTask.Body == "" {
@@ -123,9 +121,7 @@ func main() {
 
 		var newTask Task
 		if err := c.BodyParser(&newTask); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "invalid JSON body",
-			})
+			return jsonBodyParsingError(c)
 		}
 
 		if newTask.Body == "" {
@@ -208,6 +204,14 @@ func unsupportedMediaTypeError(c *fiber.Ctx) error {
 		"error": "Content-Type must be application/json",
 	})
 }
+
+func jsonBodyParsingError(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		"error": "invalid JSON body",
+	})
+}
+
+
 
 func startConf() {
 	toAdd := []Task{
