@@ -52,9 +52,7 @@ func main() {
 			}
 		}
 
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": "task not found",
-		})
+		return notFoundError(c)
 	})	
 
 	// создать задачу
@@ -111,9 +109,7 @@ func main() {
 			}
 		}
 
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": "task not found",
-		})
+		return notFoundError(c)
 	})
 
 	// обновить задачу
@@ -159,9 +155,7 @@ func main() {
 			}
 		}
 
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": "task not found",
-		})
+		return notFoundError(c)
 	})
 
 	// удалить задачу
@@ -193,9 +187,7 @@ func main() {
 				"message": "deleted task with id " + id.String(),
 			})
 		} else {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-				"error": "task not found",
-			})
+			return notFoundError(c)
 		}
 		
 	})
@@ -206,6 +198,12 @@ func main() {
 func invalidIDError(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 		"error": "invalid id",
+	})
+}
+
+func notFoundError(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		"error": "task not found",
 	})
 }
 
