@@ -40,9 +40,7 @@ func main() {
 	app.Get("/api/tasks/:id", func (c *fiber.Ctx) error {
 		id, err := uuid.Parse(c.Params("id"))
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "invalid id",
-			})
+			return invalidIDError(c)
 		}
 
 		mu.RLock()
@@ -100,9 +98,7 @@ func main() {
 	app.Patch("/api/tasks/:id", func (c *fiber.Ctx) error {
 		id, err := uuid.Parse(c.Params("id"))
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "invalid id",
-			})
+			return invalidIDError(c)
 		}
 
 		mu.Lock()
@@ -130,9 +126,7 @@ func main() {
 
 		id, err := uuid.Parse(c.Params("id"))
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "invalid id",
-			})
+			return invalidIDError(c)
 		}
 
 		var newTask Task
@@ -174,9 +168,7 @@ func main() {
 	app.Delete("/api/tasks/:id", func (c *fiber.Ctx) error {
 		id, err := uuid.Parse(c.Params("id"))
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "invalid id",
-			})
+			return invalidIDError(c)
 		}
 
 		isExist := false 
@@ -211,7 +203,11 @@ func main() {
 	app.Listen(":8080")
 }
 
-
+func invalidIDError(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		"error": "invalid id",
+	})
+}
 
 func startConf() {
 	toAdd := []Task{
